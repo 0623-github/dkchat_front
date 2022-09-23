@@ -1,4 +1,4 @@
-# vue_test
+# dkchat_front
 
 ## Project setup
 ```
