@@ -13,7 +13,7 @@
                     <el-input v-model="loginForm.password" placeholder="密码" prefix-icon="el-icon-lock" clearable show-password></el-input>
                 </el-form-item>
                 <el-form-item class="form_buttons">
-                    <el-button type="primary">登录</el-button>
+                    <el-button type="primary" @click="login">登录</el-button>
                     <el-button type="info" @click="resetLoginForm">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -39,7 +39,17 @@
 		methods: {
 			resetLoginForm() {
 				this.$refs.loginFormRef.resetFields();
-			}
+			},
+            login() {
+                this.$refs.loginFormRef.validate(valid => {
+                    if (!valid) {
+                        console.log("errorerror")
+                        return
+                    }
+                    let result = this.$axios.get('ping',{})
+                    console.log(result)
+                })
+            }
 		}
 	}
 </script>
