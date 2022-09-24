@@ -6,13 +6,14 @@
                 <img src="../assets/logo.png" alt="">
             </div>
             <el-form class="login_form" ref="loginFormRef" :model="loginForm" :rules="loginFormRules">
-                <el-form-item prop="userName">
-                    <el-input v-model="loginForm.userName" placeholder="用户账号" prefix-icon="el-icon-user-solid" clearable></el-input>
+                <el-form-item prop="account_number">
+                    <el-input v-model="loginForm.account_number" placeholder="用户账号" prefix-icon="el-icon-user-solid" clearable></el-input>
                 </el-form-item>
-                <el-form-item prop="password">
-                    <el-input v-model="loginForm.password" placeholder="密码" prefix-icon="el-icon-lock" clearable show-password></el-input>
+                <el-form-item prop="pwd">
+                    <el-input v-model="loginForm.pwd" placeholder="密码" prefix-icon="el-icon-lock" clearable show-password></el-input>
                 </el-form-item>
                 <el-form-item class="form_buttons">
+                    <el-button type="primary" @click="register">注册</el-button>
                     <el-button type="primary" @click="login">登录</el-button>
                     <el-button type="info" @click="resetLoginForm">重置</el-button>
                 </el-form-item>
@@ -26,11 +27,11 @@
 		data() {
 			return {
 				loginForm: {
-					userName: "",
-					password: ""
+					account_number: "",
+					pwd: ""
 				},
 				loginFormRules: {
-					userName: [
+					account_number: [
 						{ required: true, message: '请输入账号', trigger: 'blur' }
 					]
 				}
@@ -41,14 +42,37 @@
 				this.$refs.loginFormRef.resetFields();
 			},
             login() {
-                this.$refs.loginFormRef.validate(valid => {
+                this.$refs.loginFormRef.validate(async valid => {
                     if (!valid) {
-                        console.log("errorerror")
+                        this.$message({
+                            showClose: true,
+                            message: '请按指定输入',
+                            type: 'warning'
+                        })
                         return
                     }
-                    let result = this.$axios.get('ping',{})
-                    console.log(result)
+                    let result = await this.$axios({
+                        url: "/signIn",
+                        params: this.loginForm
+                    })
+                    console.log("loginRerquestResult:", result)
+                    if (result.data.result) {
+                        this.$message({
+                            showClose: true,
+                            message: result.data.message,
+                            type: 'success'
+                        })
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: result.data.message,
+                            type: 'error'
+                        })
+                    }
                 })
+            },
+            register() {
+                this.$router.push('/register')
             }
 		}
 	}
